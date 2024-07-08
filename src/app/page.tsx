@@ -1,8 +1,7 @@
-import { api, HydrateClient } from "~/trpc/server";
-import { Post } from "./_components/post";
-import { CreatePost } from "./_components/create-post";
 import { getServerAuthSession } from "~/server/auth";
-import { PostsContainer } from "./_components/posts-container";
+import { HydrateClient } from "~/trpc/server";
+import { CreatePost } from "~/components/create-post";
+import { PostsContainer } from "~/components/posts-container";
 
 export default async function Home() {
   const session = await getServerAuthSession();
