@@ -5,14 +5,28 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { utapi } from "~/server/uploadthing";
 
 export const postRouter = createTRPCRouter({
   create: protectedProcedure
-    .input(z.object({ content: z.string().min(1) }))
+    .input(
+      z
+        .object({
+          content: z.string().min(1).optional(),
+          attachment: z.string().optional(),
+        })
+        .refine((input) => {
+          if (!input.content && !input.attachment) {
+            throw new Error("Content or attachment is required");
+          }
+          return true;
+        }),
+    )
     .mutation(async ({ ctx, input }) => {
       return ctx.db.post.create({
         data: {
           content: input.content,
+          attachment: input.attachment,
           createdBy: { connect: { id: ctx.session.user.id } },
         },
       });
@@ -21,9 +35,17 @@ export const postRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.post.delete({
+      const post = await ctx.db.post.delete({
         where: { id: input.id, createdById: ctx.session.user.id },
       });
+
+      if (post?.attachment) {
+        const url = new URL(post.attachment);
+        const path = url.pathname.split("/");
+        await utapi.deleteFiles(path[path.length - 1]!);
+      }
+
+      return post;
     }),
 
   list: publicProcedure.input(z.string().optional()).query(({ ctx, input }) => {

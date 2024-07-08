@@ -1,8 +1,10 @@
 "use client";
 
+import { Image } from "lucide-react";
 import { useState } from "react";
-import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { UploadButton } from "~/components/uploadthing";
 import { api } from "~/trpc/react";
 
 export function CreatePost() {
@@ -16,7 +18,7 @@ export function CreatePost() {
   });
 
   return (
-    <div className="fixed bottom-3 w-screen flex justify-center items-center">
+    <div className="fixed bottom-3 flex w-screen items-center justify-center">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -24,6 +26,18 @@ export function CreatePost() {
         }}
         className="mt-auto flex w-2/5 gap-2"
       >
+        <UploadButton
+          className="ut-button:bg-transparent ut-button:w-10 ut-button:h-10 ut-allowed-content:hidden"
+          content={{
+            // eslint-disable-next-line jsx-a11y/alt-text
+            button: <Image color="black" />,
+          }}
+          endpoint="imageUploader"
+          onClientUploadComplete={(res) => {
+            createPost.mutate({ attachment: res[0]?.url });
+          }}
+        />
+
         <Input
           type="text"
           placeholder="Content"

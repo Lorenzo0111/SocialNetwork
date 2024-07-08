@@ -1,10 +1,13 @@
 import "~/styles/globals.css";
 
-import { Inter as FontSans } from "next/font/google";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { type Metadata } from "next";
+import { Inter as FontSans } from "next/font/google";
+import { extractRouterConfig } from "uploadthing/server";
+import Navbar from "~/components/navbar";
 import { cn } from "~/lib/utils";
 import { TRPCReactProvider } from "~/trpc/react";
-import Navbar from "~/components/navbar";
+import { fileRouter } from "./api/uploadthing/core";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -29,6 +32,7 @@ export default function RootLayout({
         )}
       >
         <TRPCReactProvider>
+          <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)} />
           <Navbar />
           {children}
         </TRPCReactProvider>

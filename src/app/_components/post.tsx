@@ -3,6 +3,7 @@
 import type { Post, User } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import { Trash } from "lucide-react";
+import Image from "next/image";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import UserHover from "~/components/user-hover";
 import { api } from "~/trpc/react";
@@ -37,7 +38,15 @@ export function Post({
         </small>
       </CardHeader>
       <CardContent className="relative">
-        <p>{post.content}</p>
+        {post.content && <p>{post.content}</p>}
+        {post.attachment && (
+          <Image
+            src={post.attachment}
+            alt="Attachment"
+            width={500}
+            height={500}
+          />
+        )}
         {me?.id === author.id && (
           <button
             onClick={() => {
