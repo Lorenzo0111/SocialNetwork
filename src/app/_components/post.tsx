@@ -1,50 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import type { Post, User } from "@prisma/client";
+import { formatDistanceToNow } from "date-fns";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
 
-import { api } from "~/trpc/react";
-
-export function LatestPost() {
-  const [latestPost] = api.post.getLatest.useSuspenseQuery();
-
-  const utils = api.useUtils();
-  const [name, setName] = useState("");
-  const createPost = api.post.create.useMutation({
-    onSuccess: async () => {
-      await utils.post.invalidate();
-      setName("");
-    },
-  });
-
+export function Post({
+  post,
+  author,
+}: {
+  post: Post;
+  author: {
+    id: User["id"];
+    name: User["name"];
+    image: User["image"];
+  };
+}) {
   return (
-    <div className="w-full max-w-xs">
-      {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
-      ) : (
-        <p>You have no posts yet.</p>
-      )}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          createPost.mutate({ name });
-        }}
-        className="flex flex-col gap-2"
-      >
-        <input
-          type="text"
-          placeholder="Title"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-full px-4 py-2 text-black"
-        />
-        <button
-          type="submit"
-          className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
-          disabled={createPost.isPending}
-        >
-          {createPost.isPending ? "Submitting..." : "Submit"}
-        </button>
-      </form>
-    </div>
+    <Card className="w-2/5">
+      <CardHeader className="flex flex-row items-center gap-3">
+        <Avatar>
+          <AvatarImage
+            src={author.image ?? undefined}
+            alt={author.name ?? "Avatar"}
+          />
+          <AvatarFallback>{author.name}</AvatarFallback>
+        </Avatar>
+
+        <h2>{author.name}</h2>
+
+        <small className="ml-auto">
+          {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+        </small>
+      </CardHeader>
+      <CardContent>{post.content}</CardContent>
+    </Card>
   );
 }

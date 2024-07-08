@@ -1,9 +1,10 @@
 import "~/styles/globals.css";
 
-import { GeistSans } from "geist/font/sans";
+import { Inter as FontSans } from "next/font/google";
 import { type Metadata } from "next";
-
+import { cn } from "~/lib/utils";
 import { TRPCReactProvider } from "~/trpc/react";
+import Navbar from "~/components/navbar";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -11,13 +12,26 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+    <html lang="en">
+      <body
+        className={cn(
+          "flex min-h-screen w-full flex-col gap-3 bg-background font-sans antialiased",
+          fontSans.variable,
+        )}
+      >
+        <TRPCReactProvider>
+          <Navbar />
+          {children}
+        </TRPCReactProvider>
       </body>
     </html>
   );
