@@ -3,6 +3,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -14,7 +16,9 @@ export default async function Navbar() {
 
   return (
     <nav className="flex h-14 items-center justify-between border-b p-4">
-      <h1 className="font-extrabold">Social</h1>
+      <Link href="/" className="font-extrabold">
+        Social
+      </Link>
       {session?.user && (
         <DropdownMenu>
           <DropdownMenuTrigger>
@@ -27,6 +31,11 @@ export default async function Navbar() {
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
+            <DropdownMenuLabel>Welcome {session.user.name}</DropdownMenuLabel>
+            <DropdownMenuItem asChild>
+              <Link href={`/${session.user.id}`}>Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href="/api/auth/signout">Logout</Link>
             </DropdownMenuItem>

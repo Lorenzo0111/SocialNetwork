@@ -18,8 +18,19 @@ export const postRouter = createTRPCRouter({
       });
     }),
 
-  list: publicProcedure.query(({ ctx }) => {
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.post.delete({
+        where: { id: input.id, createdById: ctx.session.user.id },
+      });
+    }),
+
+  list: publicProcedure.input(z.string().optional()).query(({ ctx, input }) => {
     return ctx.db.post.findMany({
+      where: {
+        createdById: input,
+      },
       orderBy: { createdAt: "desc" },
       include: {
         createdBy: {

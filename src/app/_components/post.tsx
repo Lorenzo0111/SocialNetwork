@@ -2,8 +2,10 @@
 
 import type { Post, User } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Trash } from "lucide-react";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
+import UserHover from "~/components/user-hover";
+import { api } from "~/trpc/react";
 
 export function Post({
   post,
@@ -16,24 +18,37 @@ export function Post({
     image: User["image"];
   };
 }) {
+  const utils = api.useUtils();
+  const deletePost = api.post.delete.useMutation({
+    onSuccess: async () => {
+      await utils.post.invalidate();
+    },
+  });
+
+  const { data: me } = api.user.me.useQuery();
+
   return (
     <Card className="w-2/5">
       <CardHeader className="flex flex-row items-center gap-3">
-        <Avatar>
-          <AvatarImage
-            src={author.image ?? undefined}
-            alt={author.name ?? "Avatar"}
-          />
-          <AvatarFallback>{author.name}</AvatarFallback>
-        </Avatar>
-
-        <h2>{author.name}</h2>
+        <UserHover user={author} />
 
         <small className="ml-auto">
           {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
         </small>
       </CardHeader>
-      <CardContent>{post.content}</CardContent>
+      <CardContent className="relative">
+        <p>{post.content}</p>
+        {me?.id === author.id && (
+          <button
+            onClick={() => {
+              deletePost.mutate({ id: post.id });
+            }}
+            className="absolute bottom-3 right-3"
+          >
+            <Trash />
+          </button>
+        )}
+      </CardContent>
     </Card>
   );
 }
