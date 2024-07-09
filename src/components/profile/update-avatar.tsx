@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { UploadButton } from "~/components/uploadthing";
 import { api } from "~/trpc/react";
 
-export default function UpdateAvatar({
+export function UpdateAvatar({
   userId,
   readOnly,
 }: {

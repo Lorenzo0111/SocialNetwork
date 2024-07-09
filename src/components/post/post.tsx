@@ -1,11 +1,12 @@
 "use client";
 
-import type { Post as PostType, User } from "@prisma/client";
+import type { Post as PostType } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import { Reply, Trash } from "lucide-react";
 import Image from "next/image";
+import { UserHover } from "~/components/profile/user-hover";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
-import UserHover from "~/components/user-hover";
+import type { PublicUser } from "~/lib/types";
 import { api } from "~/trpc/react";
 import { PostReply } from "./post-reply";
 
@@ -16,18 +17,10 @@ export function Post({
   reply,
 }: {
   posts: (PostType & {
-    createdBy: {
-      id: User["id"];
-      name: User["name"];
-      image: User["image"];
-    };
+    createdBy: PublicUser;
   })[];
   post: PostType;
-  author: {
-    id: User["id"];
-    name: User["name"];
-    image: User["image"];
-  };
+  author: PublicUser;
   reply: (post: PostType) => void;
 }) {
   const utils = api.useUtils();

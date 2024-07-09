@@ -1,4 +1,3 @@
-import type { User } from "@prisma/client";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
@@ -6,16 +5,9 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "~/components/ui/hover-card";
+import type { PublicUser } from "~/lib/types";
 
-export default function UserHover({
-  user,
-}: {
-  user: {
-    id: User["id"];
-    name: User["name"];
-    image: User["image"];
-  };
-}) {
+export function UserHover({ user }: { user: PublicUser }) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
@@ -42,7 +34,10 @@ export default function UserHover({
             <AvatarFallback>{user.name}</AvatarFallback>
           </Avatar>
 
-          <h4 className="text-sm font-semibold">{user.name}</h4>
+          <div>
+            <h4 className="text-sm font-semibold">{user.name}</h4>
+            <p>{user.bio}</p>
+          </div>
         </div>
       </HoverCardContent>
     </HoverCard>

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { CreatePost } from "../post/create-post";
 import { PostsContainer } from "../post/posts-container";
 
-export default function HomePage({ loggedIn }: { loggedIn?: boolean }) {
+export function HomePage({ loggedIn }: { loggedIn?: boolean }) {
   const [reply, setReply] = useState<Post | null>(null);
 
   return (

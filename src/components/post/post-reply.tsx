@@ -1,7 +1,8 @@
-import { Post, User } from "@prisma/client";
-import UserHover from "../user-hover";
+import type { Post } from "@prisma/client";
 import { Reply, Trash } from "lucide-react";
+import type { PublicUser } from "~/lib/types";
 import { api } from "~/trpc/react";
+import { UserHover } from "../profile/user-hover";
 
 export function PostReply({
   posts,
@@ -9,18 +10,10 @@ export function PostReply({
   reply,
 }: {
   posts: (Post & {
-    createdBy: {
-      id: User["id"];
-      name: User["name"];
-      image: User["image"];
-    };
+    createdBy: PublicUser;
   })[];
   replies: (Post & {
-    createdBy: {
-      id: User["id"];
-      name: User["name"];
-      image: User["image"];
-    };
+    createdBy: PublicUser;
   })[];
   reply: (post: Post) => void;
 }) {

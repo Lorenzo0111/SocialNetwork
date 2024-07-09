@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { Button } from "./ui/button";
 
-export default async function Navbar() {
+export async function Navbar() {
   const session = await getServerAuthSession();
 
   return (
