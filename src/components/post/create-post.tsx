@@ -31,7 +31,7 @@ export function CreatePost({
   return (
     <div className="fixed bottom-3 flex w-screen flex-col items-center justify-center">
       {reply && (
-        <div className="m-4 flex w-2/5 items-center gap-2 rounded-xl border p-4">
+        <div className="m-4 flex w-11/12 items-center gap-2 rounded-xl border p-4 lg:w-2/5">
           <Reply />
           <p className="italic">{reply.content}</p>
           <button
@@ -45,7 +45,7 @@ export function CreatePost({
         </div>
       )}
       {attachment && (
-        <div className="m-4 flex w-2/5 items-center gap-2 rounded-xl border p-4">
+        <div className="m-4 flex w-11/12 items-center gap-2 rounded-xl border p-4 lg:w-2/5">
           <Image
             src={attachment}
             alt="Uploaded Attachment"
@@ -60,7 +60,7 @@ export function CreatePost({
           e.preventDefault();
           createPost.mutate({ attachment, content, reply: reply?.id });
         }}
-        className="mt-auto flex w-2/5 gap-2"
+        className="mt-auto flex w-11/12 gap-2 lg:w-1/5"
       >
         <UploadButton
           className="ut-button:h-10 ut-button:w-10 ut-button:bg-transparent ut-allowed-content:hidden"

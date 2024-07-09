@@ -49,19 +49,23 @@ export function UpdateProfile({
           className="font-bold"
         />
 
-        <textarea
-          className="resize-none"
-          readOnly={readOnly}
-          placeholder="Biography"
+        <input
           value={bio}
           onChange={(e) => setBio(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              handleSubmit();
-            }
-          }}
+          readOnly={readOnly}
+          placeholder="Biography"
         />
+
+        <input type="submit" hidden />
+
+        <div className="flex gap-3">
+          <p>
+            <span className="font-bold">{user.followers}</span> Followers
+          </p>
+          <p>
+            <span className="font-bold">{user.following}</span> Followings
+          </p>
+        </div>
       </form>
     </>
   );

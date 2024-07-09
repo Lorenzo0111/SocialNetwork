@@ -10,27 +10,83 @@ export const userRouter = createTRPCRouter({
   get: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      return ctx.db.user.findUnique({
+      const user = await ctx.db.user.findUnique({
         where: { id: input.id },
         select: {
           id: true,
           name: true,
           image: true,
           bio: true,
+          _count: {
+            select: {
+              followers: true,
+              following: true,
+            },
+          },
         },
       });
+
+      if (!user) return null;
+
+      return {
+        ...user,
+        followers: user._count.followers,
+        following: user._count.following,
+      };
     }),
 
-  me: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.db.user.findUnique({
-      where: { id: ctx.session.user.id },
-      select: {
-        id: true,
-        name: true,
-        image: true,
-        bio: true,
-      },
-    });
+  me: createTRPCRouter({
+    get: protectedProcedure.query(async ({ ctx }) => {
+      const user = await ctx.db.user.findUnique({
+        where: { id: ctx.session.user.id },
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          bio: true,
+          _count: {
+            select: {
+              followers: true,
+              following: true,
+            },
+          },
+        },
+      });
+
+      if (!user) return null;
+
+      return {
+        ...user,
+        followers: user._count.followers,
+        following: user._count.following,
+      };
+    }),
+
+    followers: protectedProcedure.query(async ({ ctx }) => {
+      return (
+        await ctx.db.user.findMany({
+          where: {
+            following: { some: { followingId: ctx.session.user.id } },
+          },
+          select: {
+            id: true,
+          },
+        })
+      ).map((user) => user.id);
+    }),
+
+    following: protectedProcedure.query(async ({ ctx }) => {
+      return (
+        await ctx.db.user.findMany({
+          where: {
+            followers: { some: { followerId: ctx.session.user.id } },
+          },
+          select: {
+            id: true,
+          },
+        })
+      ).map((user) => user.id);
+    }),
   }),
 
   update: protectedProcedure
@@ -51,6 +107,28 @@ export const userRouter = createTRPCRouter({
           image: input.image,
           name: input.name,
           bio: input.bio,
+        },
+      });
+    }),
+
+  follow: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.follows.create({
+        data: {
+          followerId: ctx.session.user.id,
+          followingId: input,
+        },
+      });
+    }),
+
+  unfollow: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.follows.deleteMany({
+        where: {
+          followerId: ctx.session.user.id,
+          followingId: input,
         },
       });
     }),

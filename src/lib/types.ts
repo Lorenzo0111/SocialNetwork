@@ -5,4 +5,6 @@ export type PublicUser = {
   name: User["name"];
   image: User["image"];
   bio: User["bio"];
+  followers: number;
+  following: number;
 };

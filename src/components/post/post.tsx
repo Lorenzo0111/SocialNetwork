@@ -30,10 +30,10 @@ export function Post({
     },
   });
 
-  const { data: me } = api.user.me.useQuery();
+  const { data: me } = api.user.me.get.useQuery();
 
   return (
-    <Card className="w-2/5">
+    <Card className="lg:w-2/5">
       <CardHeader className="flex flex-row items-center gap-3">
         <UserHover user={author} />
 

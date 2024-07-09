@@ -1,3 +1,5 @@
+"use client";
+
 import type { Post } from "@prisma/client";
 import { Reply, Trash } from "lucide-react";
 import type { PublicUser } from "~/lib/types";
@@ -24,7 +26,7 @@ export function PostReply({
     },
   });
 
-  const { data: me } = api.user.me.useQuery();
+  const { data: me } = api.user.me.get.useQuery();
   return replies?.map((replyItem) => (
     <div key={replyItem.id} className="my-3 ml-3">
       <div className="flex items-center gap-2">

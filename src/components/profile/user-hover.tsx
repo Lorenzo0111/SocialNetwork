@@ -37,6 +37,14 @@ export function UserHover({ user }: { user: PublicUser }) {
           <div>
             <h4 className="text-sm font-semibold">{user.name}</h4>
             <p>{user.bio}</p>
+            <div className="flex gap-3">
+              <p>
+                <span className="font-bold">{user.followers}</span> followers
+              </p>
+              <p>
+                <span className="font-bold">{user.following}</span> followings
+              </p>
+            </div>
           </div>
         </div>
       </HoverCardContent>

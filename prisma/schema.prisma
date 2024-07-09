@@ -14,21 +14,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id         Int      @id @default(autoincrement())
-    content    String?
-    attachment String?
-    createdAt  DateTime @default(now())
-
-    createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
-    createdById String
-
-    parent   Post? @relation("PostToPost", fields: [parentId], references: [id], onDelete: Cascade)
-    parentId Int?
-
-    comments Post[] @relation("PostToPost")
-}
-
 // Necessary for Next auth
 model Account {
     id                       String  @id @default(cuid())
@@ -57,6 +42,14 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
 model User {
     id            String    @id @default(cuid())
     name          String?
@@ -67,12 +60,33 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    followers     Follows[] @relation("follower")
+    following     Follows[] @relation("following")
 }
 
-model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+model Follows {
+    id Int @id @default(autoincrement())
 
-    @@unique([identifier, token])
+    follower   User   @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+    followerId String
+
+    following   User   @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+    followingId String
+
+    @@unique([followerId, followingId])
+}
+
+model Post {
+    id         Int      @id @default(autoincrement())
+    content    String?
+    attachment String?
+    createdAt  DateTime @default(now())
+
+    createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+    createdById String
+
+    parent   Post? @relation("PostToPost", fields: [parentId], references: [id], onDelete: Cascade)
+    parentId Int?
+
+    comments Post[] @relation("PostToPost")
 }

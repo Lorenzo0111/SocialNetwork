@@ -50,23 +50,37 @@ export const postRouter = createTRPCRouter({
       return post;
     }),
 
-  list: publicProcedure.input(z.string().optional()).query(({ ctx, input }) => {
-    return ctx.db.post.findMany({
-      where: {
-        createdById: input,
-        parentId: input ? null : undefined,
-      },
-      orderBy: { createdAt: "desc" },
-      include: {
-        createdBy: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-            bio: true,
+  list: publicProcedure
+    .input(z.string().optional())
+    .query(async ({ ctx, input }) => {
+      const posts = await ctx.db.post.findMany({
+        where: {
+          createdById: input,
+          parentId: input ? null : undefined,
+        },
+        orderBy: { createdAt: "desc" },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              bio: true,
+              _count: {
+                select: { followers: true, following: true },
+              },
+            },
           },
         },
-      },
-    });
-  }),
+      });
+
+      return posts.map((post) => ({
+        ...post,
+        createdBy: {
+          ...post.createdBy,
+          followers: post.createdBy._count.followers,
+          following: post.createdBy._count.following,
+        },
+      }));
+    }),
 });
