@@ -1,6 +1,7 @@
 "use client";
 
-import { Image as ImageIcon } from "lucide-react";
+import type { Post } from "@prisma/client";
+import { Image as ImageIcon, Reply, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
@@ -8,7 +9,13 @@ import { Input } from "~/components/ui/input";
 import { UploadButton } from "~/components/uploadthing";
 import { api } from "~/trpc/react";
 
-export function CreatePost() {
+export function CreatePost({
+  reply,
+  setReply,
+}: {
+  reply: Post | null;
+  setReply: (post: Post | null) => void;
+}) {
   const utils = api.useUtils();
   const [content, setContent] = useState("");
   const [attachment, setAttachment] = useState("");
@@ -17,11 +24,26 @@ export function CreatePost() {
       await utils.post.invalidate();
       setContent("");
       setAttachment("");
+      setReply(null);
     },
   });
 
   return (
     <div className="fixed bottom-3 flex w-screen flex-col items-center justify-center">
+      {reply && (
+        <div className="m-4 flex w-2/5 items-center gap-2 rounded-xl border p-4">
+          <Reply />
+          <p className="italic">{reply.content}</p>
+          <button
+            className="ml-auto"
+            onClick={() => {
+              setReply(null);
+            }}
+          >
+            <X />
+          </button>
+        </div>
+      )}
       {attachment && (
         <div className="m-4 flex w-2/5 items-center gap-2 rounded-xl border p-4">
           <Image
@@ -36,7 +58,7 @@ export function CreatePost() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          createPost.mutate({ attachment, content });
+          createPost.mutate({ attachment, content, reply: reply?.id });
         }}
         className="mt-auto flex w-2/5 gap-2"
       >

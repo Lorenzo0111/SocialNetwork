@@ -14,6 +14,7 @@ export const postRouter = createTRPCRouter({
         .object({
           content: z.string().min(1).optional(),
           attachment: z.string().optional(),
+          reply: z.number().optional(),
         })
         .refine((input) => {
           if (!input.content && !input.attachment) {
@@ -28,6 +29,7 @@ export const postRouter = createTRPCRouter({
           content: input.content,
           attachment: input.attachment,
           createdBy: { connect: { id: ctx.session.user.id } },
+          parent: input.reply ? { connect: { id: input.reply } } : undefined,
         },
       });
     }),
@@ -52,6 +54,7 @@ export const postRouter = createTRPCRouter({
     return ctx.db.post.findMany({
       where: {
         createdById: input,
+        parentId: input ? null : undefined,
       },
       orderBy: { createdAt: "desc" },
       include: {

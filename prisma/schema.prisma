@@ -20,8 +20,13 @@ model Post {
     attachment String?
     createdAt  DateTime @default(now())
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
+    createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
     createdById String
+
+    parent   Post? @relation("PostToPost", fields: [parentId], references: [id], onDelete: Cascade)
+    parentId Int?
+
+    comments Post[] @relation("PostToPost")
 }
 
 // Necessary for Next auth

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { Card, CardHeader } from "~/components/ui/card";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
-import { PostsContainer } from "~/components/posts-container";
+import { PostsContainer } from "~/components/post/posts-container";
 import UpdateAvatar from "~/components/update-avatar";
 
 export default async function Profile({

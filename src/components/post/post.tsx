@@ -1,23 +1,34 @@
 "use client";
 
-import type { Post, User } from "@prisma/client";
+import type { Post as PostType, User } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
-import { Trash } from "lucide-react";
+import { Reply, Trash } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import UserHover from "~/components/user-hover";
 import { api } from "~/trpc/react";
+import { PostReply } from "./post-reply";
 
 export function Post({
+  posts,
   post,
   author,
+  reply,
 }: {
-  post: Post;
+  posts: (PostType & {
+    createdBy: {
+      id: User["id"];
+      name: User["name"];
+      image: User["image"];
+    };
+  })[];
+  post: PostType;
   author: {
     id: User["id"];
     name: User["name"];
     image: User["image"];
   };
+  reply: (post: PostType) => void;
 }) {
   const utils = api.useUtils();
   const deletePost = api.post.delete.useMutation({
@@ -37,7 +48,7 @@ export function Post({
           {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
         </small>
       </CardHeader>
-      <CardContent className="relative">
+      <CardContent className="relative pb-10">
         {post.content && <p>{post.content}</p>}
         {post.attachment && (
           <Image
@@ -47,6 +58,20 @@ export function Post({
             height={500}
           />
         )}
+
+        <PostReply
+          posts={posts}
+          replies={posts.filter((p) => p.parentId === post.id)}
+          reply={reply}
+        />
+
+        <button
+          onClick={() => reply(post)}
+          className="absolute bottom-3 left-3"
+        >
+          <Reply />
+        </button>
+
         {me?.id === author.id && (
           <button
             onClick={() => {
