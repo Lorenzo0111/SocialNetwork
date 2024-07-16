@@ -60,7 +60,7 @@ export function CreatePost({
           e.preventDefault();
           createPost.mutate({ attachment, content, reply: reply?.id });
         }}
-        className="mt-auto flex w-11/12 gap-2 lg:w-1/5"
+        className="mt-auto flex w-11/12 gap-2 lg:w-2/5"
       >
         <UploadButton
           className="ut-button:h-10 ut-button:w-10 ut-button:bg-transparent ut-allowed-content:hidden"

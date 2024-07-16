@@ -4,10 +4,12 @@ import type { Post as PostType } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import { Reply, Trash } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { UserHover } from "~/components/profile/user-hover";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import type { PublicUser } from "~/lib/types";
 import { api } from "~/trpc/react";
+import Embed from "./embed";
 import { PostReply } from "./post-reply";
 
 export function Post({
@@ -29,8 +31,13 @@ export function Post({
       await utils.post.invalidate();
     },
   });
-
+  const [urls, setUrls] = useState<string[]>([]);
   const { data: me } = api.user.me.get.useQuery();
+
+  useEffect(() => {
+    const urls = post.content?.match(/https?:\/\/[^\s]+/g) || [];
+    setUrls(urls);
+  }, [post]);
 
   return (
     <Card className="lg:w-2/5">
@@ -57,6 +64,10 @@ export function Post({
           replies={posts.filter((p) => p.parentId === post.id)}
           reply={reply}
         />
+
+        {urls.map((url) => (
+          <Embed key={url} url={url} />
+        ))}
 
         <button
           onClick={() => reply(post)}

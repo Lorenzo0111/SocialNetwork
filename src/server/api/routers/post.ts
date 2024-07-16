@@ -1,4 +1,5 @@
 import { z } from "zod";
+import * as cheerio from "cheerio";
 
 import {
   createTRPCRouter,
@@ -83,4 +84,21 @@ export const postRouter = createTRPCRouter({
         },
       }));
     }),
+
+  embed: publicProcedure.input(z.string().url()).query(async ({ input }) => {
+    if (!input.startsWith("https")) return null;
+
+    const response = await fetch(input);
+    const html = await response.text();
+
+    const $ = cheerio.load(html);
+    const result = {
+      title: $('meta[property="og:title"]').attr("content"),
+      description: $('meta[property="og:description"]').attr("content"),
+      image: $('meta[property="og:image"]').attr("content"),
+      color: $('meta[name="theme-color"]').attr("content"),
+    };
+
+    return result;
+  }),
 });
