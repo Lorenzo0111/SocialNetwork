@@ -1,20 +1,12 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
 
 datasource db {
     provider = "sqlite"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
 }
 
-// Necessary for Next auth
 model Account {
     id                       String  @id @default(cuid())
     userId                   String
@@ -60,6 +52,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    stories       Story[]
     followers     Follows[] @relation("follower")
     following     Follows[] @relation("following")
 }
@@ -89,4 +82,14 @@ model Post {
     parentId Int?
 
     comments Post[] @relation("PostToPost")
+}
+
+model Story {
+    id         Int     @id @default(autoincrement())
+    attachment String
+
+    createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+    createdById String
+
+    createdAt DateTime @default(now())
 }

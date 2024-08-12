@@ -1,0 +1,8 @@
+-- CreateTable
+CREATE TABLE "Story" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "attachment" TEXT NOT NULL,
+    "createdById" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Story_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
