@@ -6,12 +6,22 @@ import {
   HoverCardTrigger,
 } from "~/components/ui/hover-card";
 import type { PublicUser } from "~/lib/types";
+import { cn } from "~/lib/utils";
 
-export function UserHover({ user }: { user: PublicUser }) {
+export function UserHover({
+  user,
+  className,
+}: {
+  user: PublicUser;
+  className?: string;
+}) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Link href={`/${user.id}`} className="flex items-center gap-3">
+        <Link
+          href={`/${user.id}`}
+          className={cn("flex items-center gap-3", className)}
+        >
           <Avatar>
             <AvatarImage
               src={user.image ?? undefined}

@@ -11,7 +11,7 @@ export function HomePage({ loggedIn }: { loggedIn?: boolean }) {
 
   return (
     <>
-      <StoriesContainer />
+      {loggedIn && <StoriesContainer />}
       <PostsContainer setReply={setReply} />
       {loggedIn && <CreatePost reply={reply} setReply={setReply} />}
     </>

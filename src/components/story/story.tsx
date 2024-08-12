@@ -20,7 +20,8 @@ export function Story({
   const utils = api.useUtils();
   const deleteStory = api.story.delete.useMutation({
     onSuccess: async () => {
-      await utils.post.invalidate();
+      await utils.story.invalidate();
+      setOpen(false);
     },
   });
   const { data: me } = api.user.me.get.useQuery();
@@ -28,41 +29,38 @@ export function Story({
 
   return (
     <>
-      <div>
-        <Avatar onClick={() => setOpen(true)}>
-          <AvatarImage
-            src={author.image ?? undefined}
-            alt={author.name ?? "Avatar"}
-          />
-          <AvatarFallback>{author.name}</AvatarFallback>
-        </Avatar>
-        <h2>{author.name}</h2>
-      </div>
+      <Avatar onClick={() => setOpen(true)}>
+        <AvatarImage
+          src={author.image ?? undefined}
+          alt={author.name ?? "Avatar"}
+        />
+        <AvatarFallback>{author.name}</AvatarFallback>
+      </Avatar>
 
       {open &&
         createPortal(
-          <div className="absolute left-0 top-0 flex h-screen w-screen items-center justify-center bg-black/50">
-            <div className="relative h-3/4 w-1/3">
-              <UserHover user={author} />
+          <div className="absolute left-0 top-0 flex h-screen w-screen flex-col items-center justify-center bg-black/50">
+            <UserHover user={author} className="w-1/3 text-white" />
 
-              <Image
-                src={story.attachment}
-                alt="Attachment"
-                width={500}
-                height={500}
-              />
+            <Image
+              src={story.attachment}
+              alt="Attachment"
+              width={500}
+              height={500}
+              className="h-3/4 w-1/3 object-cover"
+              objectFit="cover"
+            />
 
-              {me?.id === author.id && (
-                <button
-                  onClick={() => {
-                    deleteStory.mutate({ id: story.id });
-                  }}
-                  className="absolute bottom-3 right-3"
-                >
-                  <Trash />
-                </button>
-              )}
-            </div>
+            {me?.id === author.id && (
+              <button
+                onClick={() => {
+                  deleteStory.mutate({ id: story.id });
+                }}
+                className="absolute bottom-3 right-3"
+              >
+                <Trash />
+              </button>
+            )}
           </div>,
           document.body,
         )}
