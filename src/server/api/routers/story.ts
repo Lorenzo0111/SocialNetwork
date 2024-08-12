@@ -49,11 +49,21 @@ export const storyRouter = createTRPCRouter({
             name: true,
             image: true,
             bio: true,
+            _count: {
+              select: { followers: true, following: true },
+            },
           },
         },
       },
     });
 
-    return stories;
+    return stories.map((story) => ({
+      ...story,
+      createdBy: {
+        ...story.createdBy,
+        followers: story.createdBy._count.followers,
+        following: story.createdBy._count.following,
+      },
+    }));
   }),
 });
