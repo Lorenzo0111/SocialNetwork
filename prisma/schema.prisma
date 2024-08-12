@@ -49,6 +49,7 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    private       Boolean   @default(false)
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
@@ -85,7 +86,7 @@ model Post {
 }
 
 model Story {
-    id         Int     @id @default(autoincrement())
+    id         Int    @id @default(autoincrement())
     attachment String
 
     createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)

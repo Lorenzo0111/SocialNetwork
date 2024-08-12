@@ -7,8 +7,8 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import type { PublicUser } from "~/lib/types";
 import { api } from "~/trpc/react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { UserHover } from "../profile/user-hover";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export function Story({
   author,
@@ -39,28 +39,36 @@ export function Story({
 
       {open &&
         createPortal(
-          <div className="absolute left-0 top-0 flex h-screen w-screen flex-col items-center justify-center bg-black/50">
-            <UserHover user={author} className="w-1/3 text-white" />
+          <div
+            onClick={() => setOpen(false)}
+            className="absolute left-0 top-0 flex h-screen w-screen flex-col items-center justify-center bg-black/50"
+          >
+            <div className="relative h-3/4 w-1/3">
+              <UserHover
+                user={author}
+                className="absolute left-4 top-4 text-white"
+              />
 
-            <Image
-              src={story.attachment}
-              alt="Attachment"
-              width={500}
-              height={500}
-              className="h-3/4 w-1/3 object-cover"
-              objectFit="cover"
-            />
+              <Image
+                src={story.attachment}
+                alt="Attachment"
+                width={500}
+                height={500}
+                className="h-full w-full rounded-xl object-cover"
+                objectFit="cover"
+              />
 
-            {me?.id === author.id && (
-              <button
-                onClick={() => {
-                  deleteStory.mutate({ id: story.id });
-                }}
-                className="absolute bottom-3 right-3"
-              >
-                <Trash />
-              </button>
-            )}
+              {me?.id === author.id && (
+                <button
+                  onClick={() => {
+                    deleteStory.mutate({ id: story.id });
+                  }}
+                  className="absolute bottom-3 right-3"
+                >
+                  <Trash color="white" />
+                </button>
+              )}
+            </div>
           </div>,
           document.body,
         )}

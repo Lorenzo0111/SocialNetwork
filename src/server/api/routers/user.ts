@@ -10,8 +10,27 @@ export const userRouter = createTRPCRouter({
   get: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const user = await ctx.db.user.findUnique({
-        where: { id: input.id },
+      const user = await ctx.db.user.findFirst({
+        where: {
+          AND: [
+            {
+              id: input.id,
+            },
+            {
+              OR: [
+                {
+                  followers: { some: { followerId: ctx.session?.user.id } },
+                },
+                {
+                  id: ctx.session?.user.id,
+                },
+                {
+                  private: false,
+                },
+              ],
+            },
+          ],
+        },
         select: {
           id: true,
           name: true,

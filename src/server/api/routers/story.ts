@@ -1,10 +1,6 @@
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { utapi } from "~/server/uploadthing";
 
 export const storyRouter = createTRPCRouter({
@@ -39,8 +35,25 @@ export const storyRouter = createTRPCRouter({
       return story;
     }),
 
-  list: publicProcedure.query(async ({ ctx, input }) => {
+  list: protectedProcedure.query(async ({ ctx }) => {
     const stories = await ctx.db.story.findMany({
+      where: {
+        AND: [
+          {
+            OR: [
+              {
+                createdBy: {
+                  followers: { some: { followerId: ctx.session.user.id } },
+                },
+              },
+              { createdById: ctx.session.user.id },
+            ],
+          },
+          {
+            createdAt: { gte: new Date(Date.now() - 1000 * 60 * 60 * 24) },
+          },
+        ],
+      },
       orderBy: { createdAt: "desc" },
       include: {
         createdBy: {

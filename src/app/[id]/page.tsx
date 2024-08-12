@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
+import { PrivateProfile } from "~/components/pages/PrivateProfile";
+import { PostsContainer } from "~/components/post/posts-container";
+import { FollowButton } from "~/components/profile/follow-button";
+import { UpdateProfile } from "~/components/profile/update-profile";
 import { Card, CardHeader } from "~/components/ui/card";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
-import { PostsContainer } from "~/components/post/posts-container";
-import { UpdateProfile } from "~/components/profile/update-profile";
-import { Button } from "~/components/ui/button";
-import { FollowButton } from "~/components/profile/follow-button";
 
 export default async function Profile({
   params: { id },
@@ -13,7 +13,7 @@ export default async function Profile({
   params: { id: string };
 }) {
   const user = await api.user.get({ id });
-  if (!user) return notFound();
+  if (!user) return <PrivateProfile />;
 
   const session = await getServerAuthSession();
 
