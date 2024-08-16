@@ -1,29 +1,45 @@
-# Create T3 App
+# SocialNetwork
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+<div align="center">
 
-## What's next? How do I make an app with this?
+[![GitHub Release](https://img.shields.io/github/v/release/Lorenzo0111/SocialNetwork)](https://github.com/Lorenzo0111/SocialNetwork/releases/latest)
+[![GitHub License](https://img.shields.io/github/license/Lorenzo0111/SocialNetwork)](LICENSE)
+[![Discord](https://img.shields.io/discord/1088775598337433662)](https://discord.gg/HT47UQXBqG)
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+  <hr />
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLorenzo0111%2FSocialNetwork&env=DATABASE_URL,NEXTAUTH_SECRET,DISCORD_CLIENT_ID,DISCORD_CLIENT_SECRET,UPLOADTHING_SECRET,UPLOADTHING_APP_ID&envDescription=All%20the%20Environment%20Variables%20needed%20for%20the%20app%20to%20work&envLink=https%3A%2F%2Fgithub.com%2FLorenzo0111%2FSocialNetwork%3Ftab%3Dreadme-ov-file%23deploying&project-name=social-network&repository-name=SocialNetwork"><img src="https://vercel.com/button" alt="Deploy with Vercel" height="32" /></a>
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+</div>
 
-## Learn More
+## What is SocialNetwork
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+A simple fullstack app for a Social Network with stories, posts, attachments and embeds.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Deploying
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+You'll have to set the following environment variables to setup the dashboard, here is a list of them:
 
-## How do I deploy this?
+> ✨ You can generate secret tokens by visiting [this link](https://generate-secret.vercel.app/32)
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+You can refer to [.env.example](.env.example) for a list of variables.
+
+> 🚨 You must also set `ENABLE_EXPERIMENTAL_COREPACK` to `1` to enable the corepack support if using Vercel.
+
+### Serverless
+
+You can deploy the project to Vercel or any other hosting service by clicking the buttons above.
+
+### Selfhosting
+
+If you want to selfhost, you can run `yarn`, `yarn build` and `yarn start` to start the program.
+
+The dashboard will usually be available [here](http://localhost:3000/).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+If you need help, feel free to join the [Discord Server](https://discord.gg/HT47UQXBqG) or open an issue.
