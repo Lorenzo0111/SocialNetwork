@@ -16,7 +16,7 @@
 
 A simple fullstack app for a Social Network with stories, posts, attachments and embeds.
 
-<video src="https://github.com/Lorenzo0111/SocialNetwork/blob/main/media/Demo.mp4?raw=true" width="180" />
+https://github.com/user-attachments/assets/0b656ff4-c25f-4b6a-8c6a-ce9d01146f88
 
 ## Deploying
 
