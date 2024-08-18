@@ -16,6 +16,8 @@
 
 A simple fullstack app for a Social Network with stories, posts, attachments and embeds.
 
+<video src="https://github.com/Lorenzo0111/SocialNetwork/blob/main/media/Demo.mp4?raw=true" width="180" />
+
 ## Deploying
 
 You'll have to set the following environment variables to setup the dashboard, here is a list of them:
